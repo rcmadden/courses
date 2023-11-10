@@ -35,6 +35,11 @@ class Post(BaseModel):
     likes: List[str]
     comments: List[Comment]
 
+comments = [
+        Comment(author='Jenn', comment='Great post!', likes=3),
+        Comment(author='Sam', comment='Super post!', likes=6)
+        ]
+
 new_post = Post(
     author='Russia',
     date='2021-01-01',
@@ -42,11 +47,8 @@ new_post = Post(
     content='hello world',
     id=1,
     likes=['Jenn', 'Sam'],
-    comments=[
-        Comment(author='Jenn', comment='Great post!', likes=3),
-        Comment(author='Sam', comment='Super post!', likes=6)
-        ]
+    comments=comments
     )
-
+print(new_post.comments[0].author)
 print(new_post)
 # author='Russia' co_author=None date='2021-01-01' title='First Post' content='hello world' id=1 likes=['Jenn', 'Sam'] comments=[Comment(author='Jenn', comment='Great post!', likes=3), Comment(author='Sam', comment='Super post!', likes=6)]
