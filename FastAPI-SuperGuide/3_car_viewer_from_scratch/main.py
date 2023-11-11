@@ -47,6 +47,10 @@ def get_car(request: Request, id: int = Path(...,ge=0,lt=1000)):
         response.status_code = status.HTTP_404_NOT_FOUND
     return response
 
+@app.get("/create", response_class=HTMLResponse)
+def create_car(request: Request):
+    return templates.TemplateResponse("create.html", {"request": request, "title": "Create Car"})
+
 @app.post("/cars", status_code=status.HTTP_201_CREATED)
 def add_cars(body_cars: List[Car], min_id: Optional[int] = Body(0)):
     if len(body_cars) < 1:

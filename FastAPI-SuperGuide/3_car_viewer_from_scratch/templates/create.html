@@ -1,0 +1,12 @@
+{% include 'header.html' %}
+{% include 'navbar.html' %}
+<div class="container" style="margin-top: 1em;">
+    <form action="/cars" method="POST">
+        <div class="mb-3">
+            <label for="make" class="form-lable">Make</label>
+            <input type="text" class="form-control" name="make" id="make" aria-describedby="makeDesc">
+            <div id="makeDesc" class="form-text">The make of the car.</div>
+        </div>    
+    </form>
+</div>
+{% include 'footer.html' %}
