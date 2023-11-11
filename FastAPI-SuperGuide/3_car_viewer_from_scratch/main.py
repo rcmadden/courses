@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query, Path, HTTPException, status, Body
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 # from datetime import date
@@ -10,13 +11,13 @@ from database import cars
 # print(current_year)
 
 class Car(BaseModel):
-    make: str
-    model: str
-    year: int = Field(...,ge=1970,lt=2023)
-    price: float
+    make: Optional[str]
+    model: Optional[str]
+    year: Optional[int] = Field(...,ge=1970,lt=2023)
+    price: Optional[float]
     engine: Optional[str] = "V4"
-    autonomous: bool
-    sold: List[str]
+    autonomous: Optional[bool]
+    sold: Optional[List[str]]
 
 app = FastAPI()
 
@@ -51,3 +52,18 @@ def add_cars(body_cars: List[Car], min_id: Optional[int] = Body(0)):
             min_id += 1
         cars[min_id] = car
         min_id += 1
+
+@app.put("/cars/{id}", response_model=Dict[str, Car])
+def update_car(id: int, car: Car = Body(...)):
+    stored = cars.get(id)
+    if not stored:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Could not find car with given ID.")
+    stored = Car(**stored)
+    # new = car.dict(exlude_unset=True)
+    new = car.model_dump(exclude_unset=True)
+    # new = stored.copy(update=new)
+    new = car.model_copy(update=new)
+    cars[id] = jsonable_encoder(new)
+    response = {}
+    response[id] = cars[id]
+    return response
