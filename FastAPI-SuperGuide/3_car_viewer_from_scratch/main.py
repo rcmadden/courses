@@ -13,7 +13,7 @@ from database import cars
 class Car(BaseModel):
     make: Optional[str]
     model: Optional[str]
-    year: Optional[int] = Field(...,ge=1970,lt=2023)
+    year: Optional[int] = Field(ge=1970,le=2023)
     price: Optional[float]
     engine: Optional[str] = "V4"
     autonomous: Optional[bool]
@@ -67,3 +67,9 @@ def update_car(id: int, car: Car = Body(...)):
     response = {}
     response[id] = cars[id]
     return response
+
+@app.delete("/cars/{id}")
+def delete_car(id: int):
+    if not cars.get(id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Could not find car with given ID.")
+    del cars[id]
