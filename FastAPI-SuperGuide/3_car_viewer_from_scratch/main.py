@@ -1,9 +1,13 @@
 from fastapi import FastAPI, Query, Path, HTTPException, status, Body
 from fastapi.encoders import jsonable_encoder
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 # from datetime import date
 from database import cars
+
+templates = Jinja2Templates(directory="templates")
 
 # get the current year from the date module
 # date = date.today()
@@ -20,6 +24,8 @@ class Car(BaseModel):
     sold: Optional[List[str]]
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 def root():
