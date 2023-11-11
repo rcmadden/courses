@@ -30,9 +30,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.get("/")
 def root(request: Request):
     return templates.TemplateResponse("home.html",
-                                      { "request": request, 
-                                       "title": "FastAPI | Home",
-                                        "text": "Hello world with FastAPI and Jinja2!" })
+                                      { "request": request})
 
 
 @app.get("/cars", response_model=List[Dict[int, Car]])
