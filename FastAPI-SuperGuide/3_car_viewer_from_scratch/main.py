@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, Path, HTTPException, status, Body
+from fastapi import FastAPI, Query, Path, HTTPException, status, Body, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -28,8 +28,11 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
-def root():
-    return {"message": "Hello World from FastAPI!'"}
+def root(request: Request):
+    return templates.TemplateResponse("home.html",
+                                      { "request": request, 
+                                       "title": "FastAPI | Home",
+                                        "text": "Hello world with FastAPI and Jinja2!" })
 
 
 @app.get("/cars", response_model=List[Dict[int, Car]])
