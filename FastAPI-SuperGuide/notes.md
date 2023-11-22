@@ -13,3 +13,7 @@ In a model you can use another model as a type hint
 
 Mock database
 json file
+
+# generate secret key
+import os
+os.urandom(24).hex()

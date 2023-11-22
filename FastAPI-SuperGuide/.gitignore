@@ -1,6 +1,6 @@
+.env
 penv/*
-*/__pycache__/*
-*__pycache__*
+**/__pycache__/
 *__init__.py
 todo_app.db
 3_car_information_viewer_cc
