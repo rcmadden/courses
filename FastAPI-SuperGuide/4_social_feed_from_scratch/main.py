@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Request, Response, Depends, status
+from fastapi import FastAPI, Request, Response, Depends, status, Form
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -48,9 +49,9 @@ class User(BaseModel):
     name: str
     username: str
     email: str
-    birthday: str
-    friends: List[str]
-    notifications: List[Notification]
+    birthday: Optional[str] = ""
+    friends: Optional[List[str]] = []
+    notifications: Optional[List[Notification]] = []
 
 class UserDB(User):
     hashed_password: str
@@ -65,30 +66,30 @@ def root(request: Request):
 
 @app.get("/login", response_class=HTMLResponse)
 def get_login(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request, "tilte": "FriendConnect - Login"})
+    return templates.TemplateResponse("login.html", {"request": request, "title": "FriendConnect - Login"})
 
 @app.post("/login")
-def login(request: Request, response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
+def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(username=form_data.username, password=form_data.password)
     if not user:
-        return templates.TemplateResponse("login.html", {"request": request, "tilte": "FriendConnect Login", "invalid": True}, status_code=status.HTTP_401_UNAUTHORIZED)
+        return templates.TemplateResponse("login.html", {"request": request, "title": "FriendConnect - Login", "invalid": True}, status_code=status.HTTP_401_UNAUTHORIZED)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRES_MINUTES)
     access_token = manager.create_access_token(
         data={"sub": user.username},
-              expires=access_token_expires
+        expires=access_token_expires
     )
     resp = RedirectResponse("/home", status_code=status.HTTP_302_FOUND)
     manager.set_cookie(resp, access_token)
     return resp
 
-class NotAuthenticatedExpection(Exception):
+class NotAuthenticatedException(Exception):
     pass
 
 def not_authenticated_exception_handler(request, exception):
     return RedirectResponse("/login")
 
-manager.not_authenticated_exception = NotAuthenticatedExpection
-app.add_exception_handler(NotAuthenticatedExpection, not_authenticated_exception_handler)
+manager.not_authenticated_exception = NotAuthenticatedException
+app.add_exception_handler(NotAuthenticatedException, not_authenticated_exception_handler)
 
 @app.get("/home")
 def home(user: User = Depends(manager)):
@@ -103,3 +104,20 @@ def logout():
 @app.get("/register", response_class=HTMLResponse)
 def get_register(request: Request):
     return templates.TemplateResponse("register.html",{"request": request, "title": "FriendConnect - Register"})
+
+@app.post("/register")
+def register(request: Request, username: str = Form(...), name: str = Form(...), password: str = Form(...), email: str = Form(...)):
+    hashed_password = get_hashed_password(password)
+    invalid = False
+    for db_username in users.keys():
+        if username == db_username:
+            invalid = True
+        elif users[db_username]["email"] == email:
+            invalid = True
+    if invalid:
+        return templates.TemplateResponse("register.html",{"request": request, "title": "FriendConnect - Register", "invalid": True},status_code=status.HTTP_400_BAD_REQUEST)
+    
+    users[username] = jsonable_encoder(UserDB(username=username,email=email,name=name,hashed_password=hashed_password))
+    response = RedirectResponse("/login",status_code=status.HTTP_302_FOUND)
+    manager.set_cookie(response,None)
+    return response
