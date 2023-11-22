@@ -14,11 +14,17 @@ In a model you can use another model as a type hint
 Mock database
 json file
 
-# generate secret key
+## generate secret key
 from python cli
 import os
 os.urandom(24).hex()
 
-# explore secure authorization
+## explore secure authorization
 fastapi-login - barebones and customizable
 fasapti-users - ready-to-use register, login, reset password and verify e-mail routes, customizable (database/auth) backend & more
+
+## alembic commands
+for migrating and upgrading database
+alembic init alembic
+alembic revision --autogenerate -m 'First revision'
+alembic init alembic
