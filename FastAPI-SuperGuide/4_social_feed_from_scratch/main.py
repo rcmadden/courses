@@ -93,3 +93,9 @@ app.add_exception_handler(NotAuthenticatedExpection, not_authenticated_exception
 @app.get("/home")
 def home(user: User = Depends(manager)):
     return user
+
+@app.get("/logout")
+def logout():
+    response = RedirectResponse("/")
+    manager.set_cookie(response, None)
+    return response

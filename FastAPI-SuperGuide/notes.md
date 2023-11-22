@@ -15,5 +15,10 @@ Mock database
 json file
 
 # generate secret key
+from python cli
 import os
 os.urandom(24).hex()
+
+# explore secure authorization
+fastapi-login - barebones and customizable
+fasapti-users - ready-to-use register, login, reset password and verify e-mail routes, customizable (database/auth) backend & more
