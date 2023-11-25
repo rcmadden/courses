@@ -90,4 +90,8 @@ def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db
     manager.set_cookie(resp,access_token)
     return resp
 
-# print(get_hashed_password("pass"))
+@app.get("/register")
+def get_register(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request, "title": "Register"})
+
+    
