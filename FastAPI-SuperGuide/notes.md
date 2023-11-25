@@ -22,9 +22,16 @@ os.urandom(24).hex()
 ## explore secure authorization
 fastapi-login - barebones and customizable
 fasapti-users - ready-to-use register, login, reset password and verify e-mail routes, customizable (database/auth) backend & more
+TODO:
+login only? cookie policy req'd?
 
 ## alembic commands
 for migrating and upgrading database
 alembic init alembic
 alembic revision --autogenerate -m 'First revision'
-alembic init alembic
+alembic upgrade head
+alembic revision --autogenerate -m "Add name field"
+alembic upgrade bbd
+
+Create test user hash:
+print(get_hashed_password("pass"))
