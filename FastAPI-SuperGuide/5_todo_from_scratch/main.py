@@ -66,8 +66,11 @@ def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "title": "Home"})
 
 @app.get("/tasks")
-def get_tasks(db: Session = Depends(get_db), user: schemas.User = Depends(manager)):
-    return jsonable_encoder(user)
+def get_tasks(request: Request, db: Session = Depends(get_db), user: schemas.User = Depends(manager)):
+    return templates.TemplateResponse("tasks.html", {"request": request, 
+                                                     "title": "Tasks", 
+                                                     "user": user, 
+                                                     "tasks": crud.get_tasks_by_user_id(db=db,id=user.id)})
 
 @app.get("/login")
 def get_login(request: Request):
