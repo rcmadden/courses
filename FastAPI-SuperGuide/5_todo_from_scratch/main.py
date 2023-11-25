@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import FastAPI, Request, Depends, status, Form
+from fastapi import FastAPI, Request, Depends, status, Form, Response
 from fastapi.templating import Jinja2Templates 
 from fastapi.staticfiles import StaticFiles
 from db import SessionLocal, engine, DBContext
@@ -114,3 +114,9 @@ def register(request: Request,
         return response
     else:
         return templates.TemplateResponse("register.html", {"request": request, "title": "Register", "invalid": True}, status_code=status.HTTP_401_UNAUTHORIZED)
+    
+@app.get("/logout")
+def logout(response: Response):
+    response = RedirectResponse("/")
+    manager.set_cookie(response,None)
+    return response
