@@ -9,7 +9,7 @@ class Task(TaskBase):
     user_id: str
 
     class Config:
-        orm_mode = True
+        form_attributes = True
 
 class TaskCreate(TaskBase):
     pass
@@ -25,7 +25,7 @@ class User(UserBase):
     tasks: List[Task] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserCreate(UserBase):
     pass

@@ -28,13 +28,13 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 def get_db():
     with DBContext() as db:
-        print(db)
         yield db
 
 def get_hashed_password(plain_password):
     return pwd_ctx.hash(plain_password)
 
 def verify_password(plain_password,hashed_password):
+    print(hashed_password)
     return pwd_ctx.verify(plain_password,hashed_password)
 
 @manager.user_loader()
