@@ -30,9 +30,9 @@ def get_task_by_id(db: Session, id: str):
 def add_task(db: Session, task: schemas.TaskCreate, id: str):
     if not get_user(db=db,id=str(id)):
         return None
-    task_id = uuid.uuid4
+    task_id = uuid.uuid4()
     while get_task_by_id(db=db,id=str(task_id)):
-        task_id = uuid.uuid4
+        task_id = uuid.uuid4()
 
     db_task = models.Task(id=str(task_id),text=task.text,user_id=id)
     db.add(db_task)
