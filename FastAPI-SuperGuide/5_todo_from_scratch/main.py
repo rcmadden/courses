@@ -72,6 +72,18 @@ def get_tasks(request: Request, db: Session = Depends(get_db), user: schemas.Use
                                                      "user": user, 
                                                      "tasks": crud.get_tasks_by_user_id(db=db,id=user.id)})
 
+@app.post("/tasks")
+def add_task(request:Request, text: str = Form(...), db: Session = Depends(get_db), user: schemas.User = Depends(manager)):
+    added = crud.add_task(db=db,task=schemas.TaskCreate(text=text), id=user.id)
+    if not added:
+        return templates.TemplateResponse("tasks.html", {"request": request,
+                                                         "title": "Tasks", 
+                                                         "user": user, 
+                                                         "tasks": crud.get_tasks_by_user_id(db=db,id=user.id), 
+                                                         "invalid": True}, status_code=status.HTTP_400_BAD_REQUEST)
+    else:
+        return RedirectResponse("/tasks", status_code=status.HTTP_302_FOUND)
+
 @app.get("/login")
 def get_login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "title": "Login"})
