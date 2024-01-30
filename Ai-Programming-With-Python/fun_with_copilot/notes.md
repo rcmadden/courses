@@ -3,7 +3,7 @@
 ## Shortcuts
 ctrl+Enter - Get more (10) code completion suggenstions 
 
-## Common Challengest
+## Common Challenges
 
 <!-- markdown table with 2 columns  -->
 | Challenge | Solutions |
@@ -13,3 +13,8 @@ ctrl+Enter - Get more (10) code completion suggenstions
 | | 2.) Use ctrl+Enter 
 | | 3.) Restart VS Code editor 
 | | 4.) Ask ChatGPT
+
+## Tips
+* keep the tasks small, tasks solvable in 12–20 lines of code, 
+* combine with good testing
+
